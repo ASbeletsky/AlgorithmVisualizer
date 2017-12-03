@@ -4,6 +4,7 @@ const app = require('../../app');
 const Server = require('../../server');
 const showAlgorithm = require('../show_algorithm');
 const resizeWorkspace = require('../resize_workspace');
+const experimentApp = require('../../experiment');
 
 let sidemenu_percent;
 
@@ -42,5 +43,9 @@ module.exports = () => {
     Server.loadAlgorithm(category, algorithm).then((data) => {
       showAlgorithm(category, algorithm, data);
     });
+  });
+
+  $('#experiment').click(function () {
+    experimentApp.open();
   });
 };

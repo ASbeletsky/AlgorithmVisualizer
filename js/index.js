@@ -70,7 +70,6 @@ $(() => {
     } else {
       DOM.showFirstAlgorithm();
     }
-
   });
 
   Server.loadWikiList().then((data) => {
@@ -85,5 +84,4 @@ $(() => {
   if (vLoadedScratch) {
     window.location.href = window.location.protocol + '//' + window.location.host + window.location.pathname + '#path=scratch/' + vLoadedScratch;
   }
-
 });
