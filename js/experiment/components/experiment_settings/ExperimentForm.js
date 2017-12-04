@@ -3,6 +3,7 @@ import GraphSizeSlider from './GraphSizeSlider';
 import ExperimentProgressBar from './ExperimentProgressBar';
 import Select from 'react-select';
 const app = require('./../../../app');
+const algoritmsExecute = require('./../../algorithm-executer');
 
 export default class ExperimentForm extends React.Component{
     constructor(props) {
@@ -22,7 +23,7 @@ export default class ExperimentForm extends React.Component{
 
         this.state = {
             selectedProblem: defaultProblem,
-            selectedAlgorithms: [],
+            selectedAlgorithms: "",
             graphProblems: this.getGraphProblems(),
             problemAlgorithms: this.getProblemAlgorithms(defaultProblem)
         };
@@ -31,7 +32,7 @@ export default class ExperimentForm extends React.Component{
     handleChangeProblem (selectedProbem){
         this.setState({
             selectedProblem: selectedProbem,
-            selectedAlgorithms: [],
+            selectedAlgorithms: "",
             problemAlgorithms: this.getProblemAlgorithms(selectedProbem.value)
         });
     };
@@ -41,6 +42,13 @@ export default class ExperimentForm extends React.Component{
             selectedAlgorithms: selectedAlgorithms,
         });
     };
+
+    runAlgorithms(){
+        algoritmsExecute(this.state.selectedProblem.value,
+                         this.state.selectedAlgorithms.split(","),
+                         10,
+                         20);
+    }
 
     render(){
         return (
@@ -57,6 +65,7 @@ export default class ExperimentForm extends React.Component{
                 <Select simpleValue className="col-md-5" name="algorithms" multi onChange={this.handleChangeAlgomithms.bind(this)} value={this.state.selectedAlgorithms} options={this.state.problemAlgorithms} />
             </div>
             <h3>Step 3. Run experiment</h3>
+            <button onClick={this.runAlgorithms.bind(this)}>Run</button>
             <div className="col-md-8">
                 <ExperimentProgressBar percentComplete={0} />
             </div>
