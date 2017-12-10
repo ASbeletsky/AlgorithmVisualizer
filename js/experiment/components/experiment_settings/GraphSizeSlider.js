@@ -25,14 +25,17 @@ export default class GraphSizeSlider extends React.Component{
 
     handleChange(e){
         this.setState({ from: e.value[0], to: e.value[1] });
+        this.props.onChange(this.state.from, this.state.to);
     }
 
     changeLowerBound(e){
         this.setState({ from: parseInt(e.target.value)});
+        this.props.onChange(this.state.from, this.state.to);
     }
 
     changeUpperBound(e){
         this.setState({ to: parseInt(e.target.value) });
+        this.props.onChange(this.state.from, this.state.to);
     }
 
     render(){

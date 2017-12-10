@@ -22,11 +22,20 @@ export default class ExperimentForm extends React.Component{
         };
 
         this.state = {
+            graphSizeFrom: 10,
+            graphSizeTo: 500,
             selectedProblem: defaultProblem,
             selectedAlgorithms: "",
             graphProblems: this.getGraphProblems(),
             problemAlgorithms: this.getProblemAlgorithms(defaultProblem)
         };
+    }
+
+    handleChangeGraphSize(from, to){
+        this.setState({
+            graphSizeFrom: from,
+            graphSizeTo: to
+        });
     }
 
     handleChangeProblem (selectedProbem){
@@ -46,15 +55,15 @@ export default class ExperimentForm extends React.Component{
     runAlgorithms(){
         algoritmsExecute(this.state.selectedProblem.value,
                          this.state.selectedAlgorithms.split(","),
-                         10,
-                         20);
+                         this.state.graphSizeFrom,
+                         this.state.graphSizeTo);
     }
 
     render(){
         return (
         <div className="form-horizontal">
             <h3>Step 1. Generate input graphs</h3>
-            <GraphSizeSlider minValue={10} maxValue={2000} stepSize="10" from={10} to={500}/>
+            <GraphSizeSlider minValue={10} maxValue={2000} stepSize="10" from={this.state.graphSizeFrom} to={this.state.graphSizeTo} onChange={this.handleChangeGraphSize.bind(this)}/>
             <h3>Step 2. Select algorithms for experiment</h3>
             <div className="form-group">
                 <label className="col-md-3">Problem</label>

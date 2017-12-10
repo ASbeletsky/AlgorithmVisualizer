@@ -1,8 +1,8 @@
-const graphGenerator = require('./graph-generator');
+const graphGenerator = require('./../module/data/weighted_directed_graph');
 const utils = require('./../utils');
 const get = require('./../server/ajax/get');
-const Server = require('./../server');
-
+import store from './storage'
+const actions = require('./actions/timeMeasureActions');
 
 const algorithmsCode = new Map();
 const algorithmsMeasure = new Map();
@@ -22,12 +22,12 @@ const measureExecutionTime = (graph, code) => {
 };
 
 const runAlgorithms = (problem, algorithms, startSize, endSize) => {
-    const graphs = graphGenerator(startSize, endSize);
     return loadAlgorithms(problem, algorithms).then(() => {
-        for(var graph of graphs){
+        for(let size = startSize; size <= endSize; size += 10){
+            const graph = graphGenerator.random(size);
             algorithms.forEach((algorithm) =>{
                 let executionTime = measureExecutionTime(graph, algorithmsCode.get(algorithm));
-                algorithmsMeasure.set(algorithm, {graph, executionTime });
+                store.dispatch(actions.addTimeMeasure(algorithm, size, executionTime));
             });
         }
 
