@@ -2,14 +2,17 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux'
 import Layout from './components/Layout';
+import store from './storage'
 
 const ExperimentApp = function () {
     this.open = function(){
         const app = document.getElementsByClassName('workspace')[0];
-        ReactDOM.render(<Layout/>, app);
+        ReactDOM.render(<Provider store={store}>
+                            <Layout/>
+                        </Provider>, app);
     }
 };
 
-const experimentApp = new ExperimentApp();
-module.exports = experimentApp;
+module.exports = new ExperimentApp();

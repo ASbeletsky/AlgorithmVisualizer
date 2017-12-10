@@ -1,15 +1,23 @@
 import React from 'react';
 import ExperimentForm from './experiment_settings/ExperimentForm'
+import ExecutionTimeChart from './ExecutionTimeChart'
 const app = require('./../../app');
 
-export default class Layout extends React.Component{
+class Layout extends React.Component{
     render(){
         return(
             <div className="col-md-12">
-                <div className="col-md-6">
+                <div className="col-md-5 col-xs-12">
                     <ExperimentForm categories={app.getCategories()}/>
                 </div>
-                <div className="col-md-6"></div>
+                <div className="col-md-7 col-xs-12">
+                    <div className="text-center">
+                        <h3>Execution time</h3>
+                    </div>
+                    <ExecutionTimeChart/>
+                </div>
             </div>);
     }
 }
+
+export default Layout

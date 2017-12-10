@@ -1,13 +1,13 @@
 export default function reducer(state=[], action) {
     switch (action.type) {
-        case "ADD":{
+        case "ADD_TIME_MEASURE":{
             return state.concat(action.payload);
         }
-        case "GET_ALL":{
+        case "GET_ALL_TIME_MEASURES":{
             return state;
         }
-        case "GET_BY_ALGORITHM":{
-            return state.filter((m) => m.algorithm === action.payload)
+        case  "REMOVE_ALL_TIME_MEASURES":{
+            return [];
         }
     }
 

@@ -1,11 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import GraphSizeSlider from './GraphSizeSlider';
 import ExperimentProgressBar from './ExperimentProgressBar';
 import Select from 'react-select';
+const algorithmActions = require('./../../actions/algorithm-actions');
+const timeMeasureActions = require('./../../actions/time-measure-actions');
 const app = require('./../../../app');
 const algoritmsExecute = require('./../../algorithm-executer');
 
-export default class ExperimentForm extends React.Component{
+class ExperimentForm extends React.Component{
     constructor(props) {
         super(props);
         var defaultProblem = Object.keys(props.categories)[0];
@@ -21,13 +24,20 @@ export default class ExperimentForm extends React.Component{
             });
         };
 
+        this.getProcessedGraphsPercent = function(){
+            let graphsToProccessCount = (this.state.graphSizeTo + this.state.graphSizeStep - this.state.graphSizeFrom) / this.state.graphSizeStep;
+            return this.props.graphsProcessedCount / graphsToProccessCount * 100;
+        };
+
         this.state = {
             graphSizeFrom: 10,
             graphSizeTo: 500,
+            graphSizeStep: 10,
             selectedProblem: defaultProblem,
             selectedAlgorithms: "",
             graphProblems: this.getGraphProblems(),
-            problemAlgorithms: this.getProblemAlgorithms(defaultProblem)
+            problemAlgorithms: this.getProblemAlgorithms(defaultProblem),
+            percentComplete: 0,
         };
     }
 
@@ -46,13 +56,14 @@ export default class ExperimentForm extends React.Component{
         });
     };
 
-    handleChangeAlgomithms(selectedAlgorithms){
-        this.setState({
-            selectedAlgorithms: selectedAlgorithms,
-        });
+    handleChangeAlgomithms(selectedAlgorithmsString){
+        let selectedAlgorithms = selectedAlgorithmsString.split(",");
+        this.setState({ selectedAlgorithms: selectedAlgorithmsString });
+        this.props.dispatch(algorithmActions.setAlgorithms(selectedAlgorithms));
     };
 
     runAlgorithms(){
+        this.props.dispatch(timeMeasureActions.clear());
         algoritmsExecute(this.state.selectedProblem.value,
                          this.state.selectedAlgorithms.split(","),
                          this.state.graphSizeFrom,
@@ -63,7 +74,7 @@ export default class ExperimentForm extends React.Component{
         return (
         <div className="form-horizontal">
             <h3>Step 1. Generate input graphs</h3>
-            <GraphSizeSlider minValue={10} maxValue={2000} stepSize="10" from={this.state.graphSizeFrom} to={this.state.graphSizeTo} onChange={this.handleChangeGraphSize.bind(this)}/>
+            <GraphSizeSlider minValue={10} maxValue={2000} stepSize={this.state.graphSizeStep} from={this.state.graphSizeFrom} to={this.state.graphSizeTo} onChange={this.handleChangeGraphSize.bind(this)}/>
             <h3>Step 2. Select algorithms for experiment</h3>
             <div className="form-group">
                 <label className="col-md-3">Problem</label>
@@ -74,10 +85,18 @@ export default class ExperimentForm extends React.Component{
                 <Select simpleValue className="col-md-5" name="algorithms" multi onChange={this.handleChangeAlgomithms.bind(this)} value={this.state.selectedAlgorithms} options={this.state.problemAlgorithms} />
             </div>
             <h3>Step 3. Run experiment</h3>
-            <button onClick={this.runAlgorithms.bind(this)}>Run</button>
+            <button onClick={this.runAlgorithms.bind(this)} className="btn btn-primary">Run</button>
             <div className="col-md-8">
-                <ExperimentProgressBar percentComplete={0} />
+                <ExperimentProgressBar percentComplete={this.getProcessedGraphsPercent()} />
             </div>
         </div>);
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        graphsProcessedCount: state.timeMeasure.length
+    };
+}
+
+export default connect(mapStateToProps)(ExperimentForm)

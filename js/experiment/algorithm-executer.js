@@ -2,7 +2,7 @@ const graphGenerator = require('./../module/data/weighted_directed_graph');
 const utils = require('./../utils');
 const get = require('./../server/ajax/get');
 import store from './storage'
-const actions = require('./actions/timeMeasureActions');
+const actions = require('./actions/time-measure-actions');
 
 const algorithmsCode = new Map();
 const algorithmsMeasure = new Map();
@@ -25,10 +25,13 @@ const runAlgorithms = (problem, algorithms, startSize, endSize) => {
     return loadAlgorithms(problem, algorithms).then(() => {
         for(let size = startSize; size <= endSize; size += 10){
             const graph = graphGenerator.random(size);
+            const result = { graphSize: size };
             algorithms.forEach((algorithm) =>{
                 let executionTime = measureExecutionTime(graph, algorithmsCode.get(algorithm));
-                store.dispatch(actions.addTimeMeasure(algorithm, size, executionTime));
+                result[algorithm] = executionTime;
             });
+
+            store.dispatch(actions.addTimeMeasure(result));
         }
 
         return algorithmsMeasure;
