@@ -54,7 +54,9 @@ export default class GraphSizeSlider extends React.Component{
             <div>
                 <div className="form-group">
                     <label className="col-md-4">Vertices count range</label>
-                    <input ref="vertexRange" type="text" />
+                    <div className="col-md-8">
+                        <input ref="vertexRange" type="text" />
+                    </div>
                 </div>
                 <div className="form-group">
                     <label className="col-md-4">Lower bound</label>

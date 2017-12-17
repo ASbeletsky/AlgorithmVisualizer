@@ -30,8 +30,8 @@ class ExperimentForm extends React.Component{
         };
 
         this.state = {
-            graphSizeFrom: 10,
-            graphSizeTo: 500,
+            graphSizeFrom: 50,
+            graphSizeTo: 100,
             graphSizeStep: 10,
             selectedProblem: defaultProblem,
             selectedAlgorithms: "",
@@ -85,20 +85,31 @@ class ExperimentForm extends React.Component{
         return (
         <div className="form-horizontal">
             <h3>Step 1. Generate input graphs</h3>
-            <GraphSizeSlider minValue={10} maxValue={2000} stepSize={this.state.graphSizeStep} from={this.state.graphSizeFrom} to={this.state.graphSizeTo} onChange={this.handleChangeGraphSize.bind(this)}/>
+            <GraphSizeSlider minValue={10} maxValue={1000} stepSize={this.state.graphSizeStep} from={this.state.graphSizeFrom} to={this.state.graphSizeTo} onChange={this.handleChangeGraphSize.bind(this)}/>
             <h3>Step 2. Select algorithms for experiment</h3>
+            <br/>
             <div className="form-group">
                 <label className="col-md-3">Problem</label>
-                <Select className="col-md-5" name="problem" value={this.state.selectedProblem} onChange={this.handleChangeProblem.bind(this)} options={this.state.graphProblems} />
+                <Select className="col-md-9" name="problem" value={this.state.selectedProblem} onChange={this.handleChangeProblem.bind(this)} options={this.state.graphProblems} />
             </div>
             <div className="form-group">
                 <label className="col-md-3">Algorithms</label>
-                <Select simpleValue className="col-md-5" name="algorithms" multi onChange={this.handleChangeAlgomithms.bind(this)} value={this.state.selectedAlgorithms} options={this.state.problemAlgorithms} />
+                <Select simpleValue className="col-md-9" name="algorithms" multi onChange={this.handleChangeAlgomithms.bind(this)} value={this.state.selectedAlgorithms} options={this.state.problemAlgorithms} />
             </div>
             <h3>Step 3. Run experiment</h3>
-            <button onClick={this.runAlgorithms.bind(this)} className="btn btn-primary">Run</button>
-            <div className="col-md-8">
-                <ExperimentProgressBar percentComplete={this.getProcessedGraphsPercent().toFixed(2)} />
+            <br/>
+            <div className="form-group">
+                <div className="col-md-2">
+                    <label>Progress:</label>
+                </div>
+                <div className="col-md-8">
+                    <ExperimentProgressBar percentComplete={this.getProcessedGraphsPercent().toFixed(2)} />
+                </div>
+                <div className="col-md-2">
+                    <a href="#" className="btn-sm btn-primary" onClick={this.runAlgorithms.bind(this)}>
+                        <i className="fa fa-play" aria-hidden="true"> Run</i>
+                    </a>
+                </div>
             </div>
         </div>);
     }

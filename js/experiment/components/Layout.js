@@ -1,6 +1,7 @@
 import React from 'react';
 import ExperimentForm from './experiment_settings/ExperimentForm'
 import ExecutionTimeChart from './ExecutionTimeChart'
+import TimeEfficiencyTable from './TimeEfficiencyTable'
 const app = require('./../../app');
 
 class Layout extends React.Component{
@@ -15,6 +16,10 @@ class Layout extends React.Component{
                         <h3>Execution time</h3>
                     </div>
                     <ExecutionTimeChart/>
+                    <div className="text-center">
+                        <h3>Time efficiency</h3>
+                    </div>
+                    <TimeEfficiencyTable/>
                 </div>
             </div>);
     }
