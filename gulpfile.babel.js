@@ -107,10 +107,11 @@ gulp.task('build-js', () => {
   return browserify({
     entries: './js/index.js',
     debug: true
-  })
+    })
     .transform('babelify', {
       presets: ['es2015']
     })
+    .exclude('./js/experiment/workers/algorithm-executer.js')
     .bundle()
     .pipe(source(`${appName}.js`))
     .pipe(header(banner, {
@@ -123,12 +124,34 @@ gulp.task('build-js', () => {
     .pipe(connect.reload());
 });
 
+gulp.task('build-algorithm-runner-worker', () => {
+
+  gutil.log('build-algorithm-runner-worker');
+
+  return browserify({
+        entries: './js/experiment/workers/algorithm-executer.js',
+        debug: true
+      }).transform('babelify', {
+        presets: ['es2015']
+      })
+      .bundle()
+      .pipe(source(`algorithm-executer.js`))
+      .pipe(header(banner, {
+        pkg
+      }))
+      .pipe(buffer())
+      .pipe(sourcemaps.init())
+      .pipe(sourcemaps.write(outputPaths.sourceMaps))
+      .pipe(gulp.dest(outputPaths.javascript))
+      .pipe(connect.reload());
+});
+
 // Build
 
 gulp.task('compile-css', ['build-css', 'minify-css']);
 gulp.task('compile-js', ['build-js', 'minify-js']);
-gulp.task('build', ['compile-css', 'compile-js']);
-
+//gulp.task('build', ['compile-css', 'compile-js']);
+gulp.task('build', ['build-css', 'build-js', 'build-algorithm-runner-worker']);
 // Server
 
 gulp.task('connect', function () {

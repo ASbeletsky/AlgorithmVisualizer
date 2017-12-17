@@ -8,7 +8,7 @@ class ExecutionTimeChart extends React.Component {
     render() {
         return (
             <LineChart width={700} height={350} data={this.props.timeMeasure}
-                       margin={{top: 5, right: 20, left: 10, bottom: 5}}>
+                       margin={{top: 5, right: 0, left: 5, bottom: 5}}>
                 <XAxis dataKey="graphSize"/>
                 <YAxis />
                 <CartesianGrid strokeDasharray="3 3"/>

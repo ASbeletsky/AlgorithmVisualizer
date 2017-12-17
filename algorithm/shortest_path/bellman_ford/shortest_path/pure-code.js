@@ -1,9 +1,12 @@
-var src = Integer.random(0, G.length - 1), dest;
+var random = (min, max) => {
+    return (Math.random() * (max - min + 1) | 0) + min;
+};
+var src = random(0, G.length - 1), dest;
 var MAX_VALUE = Infinity;
 var minWeight;
 
 do {
-    dest = Integer.random(0, G.length - 1);
+    dest = random(0, G.length - 1);
 }
 while (src === dest);
 

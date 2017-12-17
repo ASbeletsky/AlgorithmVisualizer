@@ -1,5 +1,6 @@
 'use strict';
 
+const $ = typeof jQuery != 'undefined'? jQuery : require('jquery-browserify');
 const RSVP = require('rsvp');
 const app = require('../../app');
 
@@ -13,16 +14,17 @@ const defaults = {
 };
 
 module.exports = function(url, options = {}) {
-  app.setIsLoading(true);
+  if(app.setIsLoading) app.setIsLoading(true);
+
 
   return new RSVP.Promise((resolve, reject) => {
     const callbacks = {
       success(response) {
-        app.setIsLoading(false);
+        if(app.setIsLoading) app.setIsLoading(false);
         resolve(response);
       },
       error(reason) {
-        app.setIsLoading(false);
+        if(app.setIsLoading) app.setIsLoading(false);
         reject(reason);
       }
     };

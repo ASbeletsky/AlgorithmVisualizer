@@ -1,7 +1,11 @@
-var s = Integer.random(0, G.length - 1);
+var random = (min, max) => {
+    return (Math.random() * (max - min + 1) | 0) + min;
+};
+
+var s = random(0, G.length - 1);
 var e; // e = end node
 do {
-    e = Integer.random(0, G.length - 1);
+    e = random(0, G.length - 1);
 } while (s === e);
 var MAX_VALUE = Infinity;
 var S = [];

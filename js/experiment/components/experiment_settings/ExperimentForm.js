@@ -6,7 +6,7 @@ import Select from 'react-select';
 const algorithmActions = require('./../../actions/algorithm-actions');
 const timeMeasureActions = require('./../../actions/time-measure-actions');
 const app = require('./../../../app');
-const algoritmsExecute = require('./../../algorithm-executer');
+import store from './../../storage'
 
 class ExperimentForm extends React.Component{
     constructor(props) {
@@ -41,10 +41,11 @@ class ExperimentForm extends React.Component{
         };
     }
 
-    handleChangeGraphSize(from, to){
+    handleChangeGraphSize(from, to, step){
         this.setState({
             graphSizeFrom: from,
-            graphSizeTo: to
+            graphSizeTo: to,
+            graphSizeStep: step
         });
     }
 
@@ -62,12 +63,22 @@ class ExperimentForm extends React.Component{
         this.props.dispatch(algorithmActions.setAlgorithms(selectedAlgorithms));
     };
 
-    runAlgorithms(){
+    runAlgorithms() {
         this.props.dispatch(timeMeasureActions.clear());
-        algoritmsExecute(this.state.selectedProblem.value,
-                         this.state.selectedAlgorithms.split(","),
-                         this.state.graphSizeFrom,
-                         this.state.graphSizeTo);
+        this.algorithmWorker = this.algorithmWorker || new Worker('./public/algorithm-executer.js');
+        this.algorithmWorker.postMessage({
+            task: 'runAlgorithms',
+            args: [this.state.selectedProblem.value,
+                this.state.selectedAlgorithms.split(","),
+                this.state.graphSizeFrom,
+                this.state.graphSizeTo,
+                this.state.graphSizeStep,
+            ]
+        });
+
+        this.algorithmWorker.onmessage = function (msg) {
+            store.dispatch(timeMeasureActions.addTimeMeasure(msg.data));
+        };
     }
 
     render(){
@@ -87,7 +98,7 @@ class ExperimentForm extends React.Component{
             <h3>Step 3. Run experiment</h3>
             <button onClick={this.runAlgorithms.bind(this)} className="btn btn-primary">Run</button>
             <div className="col-md-8">
-                <ExperimentProgressBar percentComplete={this.getProcessedGraphsPercent()} />
+                <ExperimentProgressBar percentComplete={this.getProcessedGraphsPercent().toFixed(2)} />
             </div>
         </div>);
     }

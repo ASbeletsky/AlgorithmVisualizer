@@ -1,5 +1,6 @@
 'use strict';
 
+
 const RSVP = require('rsvp');
 const app = require('./app');
 const AppConstructor = require('./app/constructor');
