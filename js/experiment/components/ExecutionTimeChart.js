@@ -1,12 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import {LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label } from 'recharts';
-
+import {LineChart, Line, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label } from 'recharts';
+const arrayUtils = require('./../../module/data/array1d.js');
 const colors = ["#8884d8", "#82ca9d", "#ffc658" ];
 
 class ExecutionTimeChart extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    componentWillMount(){
+        this.getAverageExecutionTime = function (algorithmName) {
+            return (graph) => { return graph[algorithmName].averageExecutionTime};
+        };
+    }
+
     render() {
-        return (
+        if(this.props.calculationsPerformed){
+            return (
             <LineChart width={700} height={350} data={this.props.timeMeasure}
                        margin={{top: 10, right: 50, left: 5, bottom: 15}}>
                 <XAxis dataKey="graphSize">
@@ -20,18 +31,22 @@ class ExecutionTimeChart extends React.Component {
                 <Legend verticalAlign="top"/>
                 {
                     this.props.algorithms.map((algorithmName, index) =>{
-                        return <Line key={index} type="monotone" dataKey={algorithmName} stroke={colors[index]}/>
+                        return <Line key={index} type="monotone" dataKey={this.getAverageExecutionTime(algorithmName)} stroke={colors[index]}/>
                     })
                 }
-            </LineChart>
-        );
+            </LineChart>);
+
+        } else{
+           return <div></div>;
+        }
     }
 }
 
 function mapStateToProps(state) {
     return {
+        calculationsPerformed: state.timeMeasure.length > 0,
         algorithms: state.algorithms,
-        timeMeasure: state.timeMeasure
+        timeMeasure: state.timeMeasure.sort(arrayUtils.sortBy("graphSize"))
     };
 }
 

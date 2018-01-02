@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import GraphSizeSlider from './GraphSizeSlider';
+import NumericInput from 'react-numeric-input';
+import RangeSlider from './RangeSlider';
 import ExperimentProgressBar from './ExperimentProgressBar';
 import Select from 'react-select';
+import store from './../../storage';
 const algorithmActions = require('./../../actions/algorithm-actions');
 const timeMeasureActions = require('./../../actions/time-measure-actions');
 const app = require('./../../../app');
-import store from './../../storage'
 
 class ExperimentForm extends React.Component{
     constructor(props) {
@@ -25,28 +26,43 @@ class ExperimentForm extends React.Component{
         };
 
         this.getProcessedGraphsPercent = function(){
-            let graphsToProccessCount = (this.state.graphSizeTo + this.state.graphSizeStep - this.state.graphSizeFrom) / this.state.graphSizeStep;
-            return this.props.graphsProcessedCount / graphsToProccessCount * 100;
+            return this.props.graphsProcessedCount / this.state.graphsCount * 100;
         };
 
         this.state = {
+            graphsCount: 10,
             graphSizeFrom: 50,
             graphSizeTo: 100,
-            graphSizeStep: 10,
+            edgesRatioFrom: 0.1,
+            edgesRatioTo: 0.7,
+            testsCount: 1,
             selectedProblem: defaultProblem,
             selectedAlgorithms: "",
             graphProblems: this.getGraphProblems(),
             problemAlgorithms: this.getProblemAlgorithms(defaultProblem),
-            percentComplete: 0,
         };
     }
 
-    handleChangeGraphSize(from, to, step){
+    handleChangeGraphSize(from, to){
         this.setState({
             graphSizeFrom: from,
-            graphSizeTo: to,
-            graphSizeStep: step
+            graphSizeTo: to
         });
+    }
+
+    handleChangeEdgesRatio(from, to){
+        this.setState({
+            edgesRatioFrom: from,
+            edgesRatioTo: to
+        });
+    }
+
+    handleChangeGraphsCount(graphsCount){
+        this.setState({graphsCount});
+    }
+
+    handleChangeTestsCount(testsCount){
+        this.setState({testsCount});
     }
 
     handleChangeProblem (selectedProbem){
@@ -70,9 +86,12 @@ class ExperimentForm extends React.Component{
             task: 'runAlgorithms',
             args: [this.state.selectedProblem.value,
                 this.state.selectedAlgorithms.split(","),
+                this.state.graphsCount,
                 this.state.graphSizeFrom,
                 this.state.graphSizeTo,
-                this.state.graphSizeStep,
+                this.state.edgesRatioFrom,
+                this.state.edgesRatioTo,
+                this.state.testsCount
             ]
         });
 
@@ -85,7 +104,19 @@ class ExperimentForm extends React.Component{
         return (
         <div className="form-horizontal">
             <h3>Step 1. Generate input graphs</h3>
-            <GraphSizeSlider minValue={10} maxValue={1000} stepSize={this.state.graphSizeStep} from={this.state.graphSizeFrom} to={this.state.graphSizeTo} onChange={this.handleChangeGraphSize.bind(this)}/>
+            <br/>
+            <div className="form-group">
+                <label className="col-md-4">Graphs count</label>
+                <div className="col-md-2">
+                    <NumericInput className="form-control" type="text" value={this.state.graphsCount} onChange={this.handleChangeGraphsCount.bind(this)} min={5} max={100}/>
+                </div>
+            </div>
+            <div>
+                <RangeSlider label="Vertices" minValue={10} maxValue={1000} stepSize={10} from={this.state.graphSizeFrom} to={this.state.graphSizeTo} onChange={this.handleChangeGraphSize.bind(this)}/>
+            </div>
+            <div>
+                <RangeSlider label="Edges ratio" minValue={0.1} maxValue={1.0} stepSize={0.1} from={this.state.edgesRatioFrom} to={this.state.edgesRatioTo} onChange={this.handleChangeEdgesRatio.bind(this)}/>
+            </div>
             <h3>Step 2. Select algorithms for experiment</h3>
             <br/>
             <div className="form-group">
@@ -98,6 +129,12 @@ class ExperimentForm extends React.Component{
             </div>
             <h3>Step 3. Run experiment</h3>
             <br/>
+            <div className="form-group">
+                <label className="col-md-4">Tests count</label>
+                <div className="col-md-2">
+                    <NumericInput className="form-control" type="text" value={this.state.testsCount} onChange={this.handleChangeTestsCount.bind(this)} min={1} max={64}/>
+                </div>
+            </div>
             <div className="form-group">
                 <div className="col-md-2">
                     <label>Progress:</label>

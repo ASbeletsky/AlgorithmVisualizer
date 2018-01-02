@@ -1,12 +1,14 @@
-const calculateAverage = arr => arr.reduce( ( accum, current ) => accum + current, 0 ) / arr.length;
+const arrayUtils = require('./../module/data/array1d.js');
 
 const calculateAlgorithmDominanceRateAtPoint = function (executionTime1, executionTime2) {
     return (executionTime1 - executionTime2)/Math.max(executionTime1, executionTime2);
 };
 
 const calculateAlgorithmDominanceRate = function (firstAlgorithmName, secondAlgorithmName, executionTimeMeasure) {
-    let dominanceRates = executionTimeMeasure.map(timeAtPoint => calculateAlgorithmDominanceRateAtPoint(timeAtPoint[firstAlgorithmName], timeAtPoint[secondAlgorithmName]));
-    return calculateAverage(dominanceRates);
+    let dominanceRates = executionTimeMeasure.map(timeAtPoint =>
+        calculateAlgorithmDominanceRateAtPoint(timeAtPoint[firstAlgorithmName].averageExecutionTime, timeAtPoint[secondAlgorithmName].averageExecutionTime)
+    );
+    return arrayUtils.calculateAverage(dominanceRates);
 };
 
 const calculateAlgorithmDominanceRegionAtPoint = function (executionTime1, executionTime2) {
@@ -14,8 +16,10 @@ const calculateAlgorithmDominanceRegionAtPoint = function (executionTime1, execu
 };
 
 const calculateAlgorithmDominanceRegion = function(firstAlgorithmName, secondAlgorithmName, executionTimeMeasure){
-    let dominanceRegions = executionTimeMeasure.map(timeAtPoint => calculateAlgorithmDominanceRegionAtPoint(timeAtPoint[firstAlgorithmName], timeAtPoint[secondAlgorithmName]));
-    return calculateAverage(dominanceRegions);
+    let dominanceRegions = executionTimeMeasure.map(timeAtPoint =>
+        calculateAlgorithmDominanceRegionAtPoint(timeAtPoint[firstAlgorithmName].averageExecutionTime, timeAtPoint[secondAlgorithmName].averageExecutionTime)
+    );
+    return arrayUtils.calculateAverage(dominanceRegions);
 };
 
 const calculateDominance = function (algothms, executionTimeMeasure) {
