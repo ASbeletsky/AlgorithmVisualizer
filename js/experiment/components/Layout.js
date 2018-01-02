@@ -2,6 +2,7 @@ import React from 'react';
 import ExperimentForm from './experiment_settings/ExperimentForm'
 import ExecutionTimeChart from './ExecutionTimeChart'
 import TimeEfficiencyTable from './TimeEfficiencyTable'
+import ExecutionTime3dChart from './ExecutionTime3dChart'
 const app = require('./../../app');
 
 class Layout extends React.Component{
@@ -16,6 +17,7 @@ class Layout extends React.Component{
                         <h3>Execution time</h3>
                     </div>
                     <ExecutionTimeChart/>
+                    <ExecutionTime3dChart/>
                     <div className="text-center">
                         <h3>Time efficiency</h3>
                     </div>
