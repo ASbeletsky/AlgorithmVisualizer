@@ -2,35 +2,38 @@ import React from 'react';
 import { connect } from 'react-redux';
 const Plotly = require('plotly.js');
 const arrayUtils = require('./../../module/data/array1d.js');
+const colors = ["#8884d8", "#82ca9d", "#ffc658" ];
 
 class ExecutionTime3dChart extends React.Component {
     constructor(props){
         super(props);
         this.containerId = '3d-plot';
         this.options = {
-            title: 'Mt Bruno Elevation',
-            autosize: false,
-            width: 500,
-            height: 500,
-            margin: {
-                l: 65,
-                r: 50,
-                b: 65,
-                t: 90,
-            }
-        };
+            title: 'Execution time',
+            showlegend: true,
+            autosize: true,
+            bgcolor: '#505050',
+            scene: {
+                xaxis: {
+                    title: 'Vertices count'},
+                    yaxis: {title: 'Edges count'},
+                    zaxis: {title: 'Execution time'}
+                 }
+            };
     }
 
     componentDidUpdate(){
         const xPoints = this.props.timeMeasure.map(t => t.graphSize);
         const yPoints = this.props.timeMeasure.map(t => t.edgesCount);
-        const data = this.props.algorithms.map(algorithmName =>{
+        const data = this.props.algorithms.map((algorithmName, index) =>{
             let zPoints = this.props.timeMeasure.map(t => t[algorithmName].averageExecutionTime);
             return {
+                opacity:0.8,
+                color: colors[index],
+                type: 'mesh3d',
                 x: xPoints,
                 y: yPoints,
                 z: zPoints,
-                type: 'surface'
             };
         });
         if(this.props.calculationsPerformed) {
@@ -40,7 +43,7 @@ class ExecutionTime3dChart extends React.Component {
 
     render() {
          if(this.props.calculationsPerformed) {
-             return <div id={this.containerId}></div>
+             return <div id='3d-plot'></div>
          } else {
              return <div></div>
          }
@@ -49,7 +52,7 @@ class ExecutionTime3dChart extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        calculationsPerformed: state.timeMeasure.length > 0,
+        calculationsPerformed: state.timeMeasure.length > 10,
         algorithms: state.algorithms,
         timeMeasure: state.timeMeasure.sort(arrayUtils.sortBy("graphSize"))
     };
