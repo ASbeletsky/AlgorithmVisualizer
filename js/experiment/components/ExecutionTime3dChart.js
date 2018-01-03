@@ -52,7 +52,7 @@ class ExecutionTime3dChart extends React.Component {
 
 function mapStateToProps(state) {
     return {
-        calculationsPerformed: state.timeMeasure.length > 10,
+        calculationsPerformed: state.timeMeasure.length > 2,
         algorithms: state.algorithms,
         timeMeasure: state.timeMeasure.sort(arrayUtils.sortBy("graphSize"))
     };
