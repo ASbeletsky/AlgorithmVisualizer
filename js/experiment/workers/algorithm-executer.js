@@ -29,7 +29,7 @@ const arrayUtils = require('./../../module/data/array1d');
     const countEdges = (graph) => {
         var edgesCount = 0;
         for(let i = 0; i < graph.length; i++){
-            for(let j = 0;j < graph.length && graph[i][j] > 0; j++){
+            for(let j = 0;j < graph.length && j > i && graph[i][j] > 0; j++){
                 edgesCount++;
             }
         }
