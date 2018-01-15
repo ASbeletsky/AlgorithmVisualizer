@@ -6,7 +6,7 @@ const calculateAlgorithmDominanceRateAtPoint = function (executionTime1, executi
 
 const calculateAlgorithmDominanceRate = function (firstAlgorithmName, secondAlgorithmName, executionTimeMeasure) {
     let dominanceRates = executionTimeMeasure.map(timeAtPoint =>
-        calculateAlgorithmDominanceRateAtPoint(timeAtPoint[firstAlgorithmName].averageExecutionTime, timeAtPoint[secondAlgorithmName].averageExecutionTime)
+        calculateAlgorithmDominanceRateAtPoint(timeAtPoint[firstAlgorithmName], timeAtPoint[secondAlgorithmName])
     );
     return arrayUtils.calculateAverage(dominanceRates);
 };
@@ -17,7 +17,7 @@ const calculateAlgorithmDominanceRegionAtPoint = function (executionTime1, execu
 
 const calculateAlgorithmDominanceRegion = function(firstAlgorithmName, secondAlgorithmName, executionTimeMeasure){
     let dominanceRegions = executionTimeMeasure.map(timeAtPoint =>
-        calculateAlgorithmDominanceRegionAtPoint(timeAtPoint[firstAlgorithmName].averageExecutionTime, timeAtPoint[secondAlgorithmName].averageExecutionTime)
+        calculateAlgorithmDominanceRegionAtPoint(timeAtPoint[firstAlgorithmName], timeAtPoint[secondAlgorithmName])
     );
     return arrayUtils.calculateAverage(dominanceRegions);
 };

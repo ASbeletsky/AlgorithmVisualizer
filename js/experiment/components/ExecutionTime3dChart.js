@@ -26,7 +26,7 @@ class ExecutionTime3dChart extends React.Component {
         const xPoints = this.props.timeMeasure.map(t => t.graphSize);
         const yPoints = this.props.timeMeasure.map(t => t.edgesCount);
         const data = this.props.algorithms.map((algorithmName, index) =>{
-            let zPoints = this.props.timeMeasure.map(t => t[algorithmName].averageExecutionTime);
+            let zPoints = this.props.timeMeasure.map(t => t[algorithmName]);
             return {
                 opacity:0.8,
                 color: colors[index],

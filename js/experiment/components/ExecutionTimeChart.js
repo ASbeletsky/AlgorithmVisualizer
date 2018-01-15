@@ -11,7 +11,7 @@ class ExecutionTimeChart extends React.Component {
 
     componentWillMount(){
         this.getAverageExecutionTime = function (algorithmName) {
-            return (graph) => { return graph[algorithmName].averageExecutionTime};
+            return (graph) => { return graph[algorithmName]};
         };
     }
 

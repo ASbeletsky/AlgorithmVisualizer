@@ -29,8 +29,10 @@ const arrayUtils = require('./../../module/data/array1d');
     const countEdges = (graph) => {
         var edgesCount = 0;
         for(let i = 0; i < graph.length; i++){
-            for(let j = 0;j < graph.length && j > i && graph[i][j] > 0; j++){
-                edgesCount++;
+            for(let j = i; j < graph.length; j++){
+                if(graph[i][j] > 0) {
+                    edgesCount++;
+                }
             }
         }
 
@@ -49,8 +51,7 @@ const arrayUtils = require('./../../module/data/array1d');
                 algorithms.forEach((algorithm) => {
                     let executionTimes = measureExecutionTime(graph, algorithmsCode.get(algorithm), testsCount);
                     timeMeasure[algorithm] = {};
-                    timeMeasure[algorithm].averageExecutionTime = arrayUtils.calculateAverage(executionTimes);
-                    timeMeasure[algorithm].executionTimeTests = executionTimes;
+                    timeMeasure[algorithm] = arrayUtils.calculateAverage(executionTimes);
                 });
                 timeMeasures.push(timeMeasure);
 

@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import NumericInput from 'react-numeric-input';
 import RangeSlider from './RangeSlider';
 import ExperimentProgressBar from './ExperimentProgressBar';
+import CSVExport from './CSVExport';
 import Select from 'react-select';
 import store from './../../storage';
 const algorithmActions = require('./../../actions/algorithm-actions');
@@ -148,6 +149,7 @@ class ExperimentForm extends React.Component{
                     </a>
                 </div>
             </div>
+            <CSVExport experimentDone={this.getProcessedGraphsPercent().toFixed(2) == 100}></CSVExport>
         </div>);
     }
 }
